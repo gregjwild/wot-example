@@ -9,6 +9,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "async": "^2.4.0",
+    "node-dht-sensor": "0.0.32",
+    "onoff": "^1.1.2",
+    "pi-gpio": "0.0.8",
     "request": "^2.81.0"
   }
 }

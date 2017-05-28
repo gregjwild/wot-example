@@ -11,7 +11,7 @@ function randomInt(low, high) {
 
 function simpleRest(req, res) {
   console.log(`${req.method} | ${req.url}`);
-  res.writeHeader(200, {"Content-Type": "application/json"});git
+  res.writeHeader(200, {"Content-Type": "application/json"});
   switch (req.url){
 	  case '/temperature': 
 		let currentTemp = randomInt(1, 40);
@@ -32,5 +32,6 @@ function simpleRest(req, res) {
 	}
     res.end();
 }
+
 
 console.log(`Server running on port ${PORT}.`);
