@@ -24,6 +24,6 @@ process.on('SIGINT', () => {
   yLED.writeSync(0);
   rLED.unexport();
   yLED.unexport();
-  console.log('Bye Bye');
+  console.log('\nBye Bye');
   process.exit();
 });
