@@ -1,37 +1,47 @@
-const http = require('http');
-const request = require('request');
-
+const Express = require('express');
+const app = new Express();
 const PORT = 8585;
 
-http.createServer((req, res) => simpleRest(req, res)).listen(PORT);
+app.get('/', (req, res) => getStatus(req, res));
+app.listen(8585, () => initialize());
 
-function randomInt(low, high) {
-  return Math.floor(Math.random() * (high - low) + low);
+let onoff = require ('onoff');
+let Gpio = onoff.Gpio,
+    rLED = new Gpio(4, 'out'), 
+    yLED = new Gpio(17, 'out'),
+    interval;
+
+function initialize() {
+    console.log(`Server running on port ${PORT}.`);
+    yLED.write(1, () => console.log('Initialising yellow'));   
 }
 
-function simpleRest(req, res) {
-  console.log(`${req.method} | ${req.url}`);
-  res.writeHeader(200, {"Content-Type": "application/json"});
-  switch (req.url){
-	  case '/temperature': 
-		let currentTemp = randomInt(1, 40);
-		console.log(`Current temp: ${currentTemp}`);
-		res.write(`{"temperature": ${currentTemp}}`);
-		break
-		
-	  case '/light':
-		let currentLight = randomInt(1, 100);
-		console.log(`Current light: ${currentLight}`);
-		res.write(`{"light": ${currentLight}}`);
-		break
-		
-	  default:
-	    console.log("Default Data");
-		res.end('{"Hello": "World"}');
-
-	}
-    res.end();
+function getStatus(req, res) {
+    res.send(`
+    Yellow: ${yLED.readSync()}
+    Red: ${rLED.readSync()}
+    `);
 }
 
+ 
+interval = setInterval(() => {
+  //LIGHTS!
+  let rVal = rLED.readSync();
+  let yVal = yLED.readSync();
+  rVal == 0 ? 
+	rLED.write(1, () => console.log("Switching red on.")) : 
+	rLED.write(0, () => console.log("Switching red off."));
+  yVal == 0 ? 
+	yLED.write(1, () => console.log("Switching yellow on.")) : 
+	yLED.write(0, () => console.log("Switching yellow off."));	 	 
+},2000);
 
-console.log(`Server running on port ${PORT}.`);
+process.on('SIGINT', () => {
+  clearInterval(interval);
+  rLED.writeSync(0);
+  yLED.writeSync(0);
+  rLED.unexport();
+  yLED.unexport();
+  console.log('\nBye Bye');
+  process.exit();
+});
