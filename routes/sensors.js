@@ -1,6 +1,6 @@
 const express = require('express'),
-  router = express.Router();
-  resources = require('../../resources/model');
+  router = express.Router(),
+  resources = require('./../resources/model');
 
 // On GETing from index, the list of sensors on the pi will be sent.
 router.route('/').get((req, res, next) => res.send(resources.pi.sensors));
