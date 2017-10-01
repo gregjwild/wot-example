@@ -51,7 +51,7 @@ function switchOnOff(value) {
 
 // As you might expect, this connects to the hardware
 function connectHardware(ledGpio) {
-  var Gpio = require('onoff').Gpio;
+  const Gpio = require('onoff').Gpio;
   actuator = new Gpio(ledGpio, 'out'); 
   console.info(`Hardware ${pluginName} actuator started!`);
 };
